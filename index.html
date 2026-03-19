@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>로그인 — IBM Carbon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Carbon Tokens ─────────────────────────────────────── */
+    :root {
+      --cds-background:           #ffffff;
+      --cds-layer-01:             #f4f4f4;
+      --cds-layer-02:             #ffffff;
+      --cds-layer-hover-01:       #e8e8e8;
+      --cds-border-subtle-00:     #e0e0e0;
+      --cds-border-subtle-01:     #c6c6c6;
+      --cds-border-strong-01:     #8d8d8d;
+      --cds-border-interactive:   #0f62fe;
+      --cds-text-primary:         #161616;
+      --cds-text-secondary:       #525252;
+      --cds-text-placeholder:     #a8a8a8;
+      --cds-text-disabled:        #c6c6c6;
+      --cds-text-on-color:        #ffffff;
+      --cds-text-error:           #da1e28;
+      --cds-text-helper:          #6f6f6f;
+      --cds-icon-primary:         #161616;
+      --cds-icon-secondary:       #525252;
+      --cds-icon-on-color:        #ffffff;
+      --cds-interactive:          #0f62fe;
+      --cds-interactive-hover:    #0353e9;
+      --cds-interactive-active:   #002d9c;
+      --cds-focus:                #0f62fe;
+      --cds-focus-inset:          #ffffff;
+      --cds-button-primary:       #0f62fe;
+      --cds-button-primary-hover: #0353e9;
+      --cds-button-primary-active:#002d9c;
+      --cds-button-tertiary:      transparent;
+      --cds-button-danger:        #da1e28;
+      --cds-support-error:        #da1e28;
+      --cds-support-success:      #198038;
+      --cds-support-warning:      #f1c21b;
+      --cds-support-info:         #0043ce;
+      --cds-link-primary:         #0f62fe;
+      --cds-link-primary-hover:   #0353e9;
+      --cds-link-visited:         #8a3ffc;
+      --cds-overlay:              rgba(22,22,22,.5);
+
+      /* spacing */
+      --s-01: 2px;  --s-02: 4px;  --s-03: 8px;  --s-04: 12px;
+      --s-05: 16px; --s-06: 24px; --s-07: 32px; --s-08: 40px;
+      --s-09: 48px; --s-10: 64px; --s-11: 80px; --s-12: 96px;
+
+      /* naver */
+      --naver-green: #03C75A;
+      --naver-green-hover: #02b350;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'IBM Plex Sans KR', 'IBM Plex Sans', sans-serif;
+      background: var(--cds-layer-01);
+      color: var(--cds-text-primary);
+      font-size: 14px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Top Bar ────────────────────────────────────────────── */
+    .top-bar {
+      background: #161616;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--s-05);
+      flex-shrink: 0;
+    }
+    .top-bar__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--s-03);
+      text-decoration: none;
+    }
+    .top-bar__logo-icon {
+      width: 20px; height: 20px;
+      background: var(--cds-interactive);
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .top-bar__logo-icon svg { fill: white; }
+    .top-bar__brand {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .16px;
+    }
+
+    /* ─── Page Wrapper ───────────────────────────────────────── */
+    .page-wrapper {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 48px);
+    }
+
+    /* ─── Left Panel (Illustration) ─────────────────────────── */
+    .left-panel {
+      background: #001141;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--s-11) var(--s-10);
+      position: relative;
+      overflow: hidden;
+    }
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 30% 50%, rgba(15,98,254,.35) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 70% 20%, rgba(138,63,252,.2) 0%, transparent 70%);
+    }
+    .left-panel__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .left-panel__content { position: relative; z-index: 1; }
+    .left-panel__eyebrow {
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(255,255,255,.6);
+      letter-spacing: .32px;
+      text-transform: uppercase;
+      margin-bottom: var(--s-03);
+    }
+    .left-panel__title {
+      font-size: 42px;
+      font-weight: 300;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: var(--s-05);
+      letter-spacing: -0.5px;
+    }
+    .left-panel__title strong {
+      font-weight: 600;
+      color: #78a9ff;
+    }
+    .left-panel__desc {
+      font-size: 14px;
+      color: rgba(255,255,255,.6);
+      line-height: 1.6;
+      max-width: 360px;
+    }
+    /* Floating card decoration */
+    .left-panel__card {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-30%);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 4px;
+      backdrop-filter: blur(12px);
+      padding: var(--s-05) var(--s-06);
+      width: 260px;
+      z-index: 1;
+    }
+    .left-panel__card-label {
+      font-size: 11px;
+      color: rgba(255,255,255,.45);
+      letter-spacing: .32px;
+      margin-bottom: var(--s-02);
+    }
+    .left-panel__card-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #78a9ff;
+      margin-bottom: var(--s-04);
+    }
+    .left-panel__card-bar {
+      height: 4px;
+      background: rgba(255,255,255,.12);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .left-panel__card-bar-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, #0f62fe, #78a9ff);
+      border-radius: 2px;
+      animation: barGrow 1.6s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    @keyframes barGrow {
+      from { width: 0; }
+      to   { width: 72%; }
+    }
+
+    /* ─── Right Panel (Form) ─────────────────────────────────── */
+    .right-panel {
+      background: var(--cds-background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s-09) var(--s-08);
+    }
+
+    .login-form-wrap {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* ─── Form Header ────────────────────────────────────────── */
+    .form-header {
+      margin-bottom: var(--s-07);
+    }
+    .form-header__eyebrow {
+      font-size: 12px;
+      color: var(--cds-interactive);
+      font-weight: 600;
+      letter-spacing: .32px;
+      text-transform: uppercase;
+      margin-bottom: var(--s-02);
+    }
+    .form-header__title {
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--cds-text-primary);
+      line-height: 1.25;
+      margin-bottom: var(--s-03);
+      letter-spacing: -.2px;
+    }
+    .form-header__subtitle {
+      font-size: 14px;
+      color: var(--cds-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ─── Carbon Text Input ──────────────────────────────────── */
+    .cds-form-item { margin-bottom: var(--s-05); }
+
+    .cds-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--cds-text-secondary);
+      letter-spacing: .32px;
+      margin-bottom: var(--s-02);
+    }
+    .cds-label sup {
+      color: var(--cds-support-error);
+      font-size: 11px;
+      margin-left: 2px;
+    }
+
+    .cds-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .cds-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 var(--s-05);
+      background: var(--cds-layer-01);
+      border: none;
+      border-bottom: 1px solid var(--cds-border-strong-01);
+      color: var(--cds-text-primary);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: background .1s, border-color .1s;
+    }
+    .cds-input::placeholder { color: var(--cds-text-placeholder); }
+    .cds-input:hover { background: var(--cds-layer-hover-01); }
+    .cds-input:focus {
+      background: var(--cds-layer-01);
+      border-bottom-color: var(--cds-focus);
+      outline: 2px solid var(--cds-focus);
+      outline-offset: -2px;
+    }
+    .cds-input.is-invalid {
+      border-bottom-color: var(--cds-support-error);
+      outline: 2px solid var(--cds-support-error);
+      outline-offset: -2px;
+    }
+    .cds-input.is-invalid:focus {
+      border-bottom-color: var(--cds-support-error);
+    }
+    .cds-input-icon-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--cds-icon-secondary);
+      transition: background .1s;
+    }
+    .cds-input-icon-btn:hover { background: var(--cds-layer-hover-01); }
+    .cds-input-icon-btn:focus {
+      outline: 2px solid var(--cds-focus);
+      outline-offset: -2px;
+    }
+    .cds-input-icon-btn svg { pointer-events: none; }
+
+    .cds-helper-text {
+      font-size: 12px;
+      color: var(--cds-text-helper);
+      line-height: 1.33;
+      margin-top: var(--s-02);
+    }
+    .cds-error-text {
+      font-size: 12px;
+      color: var(--cds-support-error);
+      line-height: 1.33;
+      margin-top: var(--s-02);
+      display: flex;
+      align-items: center;
+      gap: var(--s-02);
+      display: none;
+    }
+    .cds-form-item.has-error .cds-error-text { display: flex; }
+    .cds-form-item.has-error .cds-input {
+      border-bottom-color: var(--cds-support-error);
+      outline: 2px solid var(--cds-support-error);
+      outline-offset: -2px;
+    }
+
+    /* ─── Carbon Checkbox ────────────────────────────────────── */
+    .cds-checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--s-03);
+      cursor: pointer;
+      user-select: none;
+    }
+    .cds-checkbox-wrapper input[type="checkbox"] {
+      appearance: none;
+      width: 16px; height: 16px;
+      border: 1px solid var(--cds-icon-primary);
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: background .1s, border-color .1s;
+    }
+    .cds-checkbox-wrapper input[type="checkbox"]:checked {
+      background: var(--cds-icon-primary);
+      border-color: var(--cds-icon-primary);
+    }
+    .cds-checkbox-wrapper input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 1px; left: 4px;
+      width: 5px; height: 9px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+    .cds-checkbox-wrapper input[type="checkbox"]:focus {
+      outline: 2px solid var(--cds-focus);
+      outline-offset: 2px;
+    }
+    .cds-checkbox-label {
+      font-size: 14px;
+      color: var(--cds-text-primary);
+    }
+
+    /* ─── Carbon Buttons ─────────────────────────────────────── */
+    .cds-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-04);
+      min-height: 48px;
+      padding: 0 var(--s-07) 0 var(--s-05);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: .16px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background .1s, border-color .1s, color .1s;
+      position: relative;
+      outline: none;
+      white-space: nowrap;
+    }
+    .cds-btn:focus {
+      border-color: var(--cds-focus);
+      box-shadow: inset 0 0 0 1px var(--cds-focus), inset 0 0 0 2px var(--cds-focus-inset);
+    }
+    .cds-btn--primary {
+      background: var(--cds-button-primary);
+      color: var(--cds-text-on-color);
+      border-color: transparent;
+    }
+    .cds-btn--primary:hover { background: var(--cds-button-primary-hover); }
+    .cds-btn--primary:active { background: var(--cds-button-primary-active); }
+
+    .cds-btn--tertiary {
+      background: transparent;
+      color: var(--cds-interactive);
+      border-color: var(--cds-interactive);
+    }
+    .cds-btn--tertiary:hover {
+      background: var(--cds-interactive);
+      color: var(--cds-text-on-color);
+    }
+    .cds-btn--tertiary:active {
+      background: var(--cds-interactive-active);
+      border-color: var(--cds-interactive-active);
+      color: var(--cds-text-on-color);
+    }
+
+    .cds-btn--ghost {
+      background: transparent;
+      color: var(--cds-interactive);
+      border-color: transparent;
+      padding: 0 var(--s-04);
+      min-height: 40px;
+    }
+    .cds-btn--ghost:hover { background: rgba(15,98,254,.1); }
+
+    .cds-btn--full { width: 100%; justify-content: space-between; }
+    .cds-btn--sm { min-height: 32px; font-size: 14px; padding: 0 var(--s-05) 0 var(--s-04); }
+    .cds-btn--md { min-height: 40px; }
+
+    .cds-btn--disabled,
+    .cds-btn:disabled {
+      background: var(--cds-layer-01);
+      color: var(--cds-text-disabled);
+      border-color: var(--cds-border-subtle-00);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .cds-btn__icon { flex-shrink: 0; }
+
+    /* Naver button */
+    .btn-naver {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-03);
+      width: 100%;
+      min-height: 48px;
+      background: var(--naver-green);
+      color: #ffffff;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .16px;
+      transition: background .15s;
+      position: relative;
+      outline: none;
+    }
+    .btn-naver:hover { background: var(--naver-green-hover); }
+    .btn-naver:active { background: #029944; }
+    .btn-naver:focus {
+      outline: 2px solid var(--cds-focus);
+      outline-offset: 2px;
+    }
+    .btn-naver__logo {
+      width: 20px; height: 20px;
+      background: white;
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn-naver__logo svg { display: block; }
+
+    /* ─── Divider ─────────────────────────────────────────────── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--s-04);
+      margin: var(--s-06) 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--cds-border-subtle-00);
+    }
+    .divider__text {
+      font-size: 12px;
+      color: var(--cds-text-secondary);
+      white-space: nowrap;
+      letter-spacing: .32px;
+    }
+
+    /* ─── Form actions row ───────────────────────────────────── */
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: var(--s-05) 0 var(--s-06);
+    }
+    .cds-link {
+      font-size: 14px;
+      color: var(--cds-link-primary);
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      transition: border-color .1s, color .1s;
+    }
+    .cds-link:hover {
+      color: var(--cds-link-primary-hover);
+      border-bottom-color: var(--cds-link-primary-hover);
+    }
+    .cds-link--sm { font-size: 12px; }
+
+    /* ─── Sign up row ────────────────────────────────────────── */
+    .signup-row {
+      margin-top: var(--s-06);
+      padding-top: var(--s-06);
+      border-top: 1px solid var(--cds-border-subtle-00);
+      text-align: center;
+      font-size: 14px;
+      color: var(--cds-text-secondary);
+    }
+    .signup-row a {
+      color: var(--cds-link-primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: var(--s-02);
+      cursor: pointer;
+    }
+    .signup-row a:hover { text-decoration: underline; }
+
+    /* ─── Inline Notification ────────────────────────────────── */
+    .cds-notification {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--s-04);
+      padding: var(--s-04) var(--s-05);
+      margin-bottom: var(--s-05);
+      border-left: 3px solid;
+      font-size: 14px;
+      line-height: 1.4;
+      display: none;
+    }
+    .cds-notification--error {
+      background: #fff1f1;
+      border-color: var(--cds-support-error);
+      color: var(--cds-support-error);
+    }
+    .cds-notification--success {
+      background: #defbe6;
+      border-color: var(--cds-support-success);
+      color: #198038;
+    }
+    .cds-notification--info {
+      background: #edf5ff;
+      border-color: var(--cds-support-info);
+      color: var(--cds-support-info);
+    }
+    .cds-notification.is-visible { display: flex; }
+    .cds-notification__icon { flex-shrink: 0; margin-top: 1px; }
+    .cds-notification__content { flex: 1; }
+    .cds-notification__title { font-weight: 600; }
+    .cds-notification__subtitle { font-weight: 400; color: inherit; opacity: .9; }
+
+    /* ─── Modal ──────────────────────────────────────────────── */
+    .cds-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--cds-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s;
+    }
+    .cds-modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .cds-modal {
+      background: var(--cds-layer-02);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(24px);
+      transition: transform .2s cubic-bezier(.22,1,.36,1);
+      box-shadow: 0 12px 32px rgba(0,0,0,.18);
+    }
+    .cds-modal-overlay.is-open .cds-modal {
+      transform: translateY(0);
+    }
+    .cds-modal__header {
+      padding: var(--s-05) var(--s-05) var(--s-04);
+      border-bottom: 1px solid var(--cds-border-subtle-00);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--s-04);
+      position: sticky;
+      top: 0;
+      background: var(--cds-layer-02);
+      z-index: 1;
+    }
+    .cds-modal__title {
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--cds-text-primary);
+      line-height: 1.3;
+    }
+    .cds-modal__close {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--cds-icon-primary);
+      flex-shrink: 0;
+      transition: background .1s;
+    }
+    .cds-modal__close:hover { background: var(--cds-layer-hover-01); }
+    .cds-modal__close:focus {
+      outline: 2px solid var(--cds-focus);
+      outline-offset: -2px;
+    }
+    .cds-modal__body {
+      padding: var(--s-06) var(--s-05);
+      flex: 1;
+    }
+    .cds-modal__body-desc {
+      font-size: 14px;
+      color: var(--cds-text-secondary);
+      line-height: 1.5;
+      margin-bottom: var(--s-06);
+    }
+    .cds-modal__footer {
+      padding: var(--s-04) var(--s-05);
+      background: var(--cds-layer-01);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--s-02);
+      border-top: 1px solid var(--cds-border-subtle-00);
+    }
+
+    /* ─── Password Strength ──────────────────────────────────── */
+    .pw-strength {
+      margin-top: var(--s-03);
+    }
+    .pw-strength__bars {
+      display: flex;
+      gap: var(--s-01);
+      margin-bottom: var(--s-02);
+    }
+    .pw-strength__bar {
+      flex: 1;
+      height: 4px;
+      background: var(--cds-border-subtle-00);
+      border-radius: 2px;
+      transition: background .2s;
+    }
+    .pw-strength__bar.active-weak   { background: var(--cds-support-error); }
+    .pw-strength__bar.active-fair   { background: var(--cds-support-warning); }
+    .pw-strength__bar.active-good   { background: #f1c21b; }
+    .pw-strength__bar.active-strong { background: var(--cds-support-success); }
+    .pw-strength__label {
+      font-size: 12px;
+      color: var(--cds-text-helper);
+    }
+
+    /* ─── Step Indicator (for reset) ────────────────────────── */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: var(--s-06);
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: var(--s-03);
+      flex: 1;
+    }
+    .step__circle {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--cds-border-subtle-01);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      color: var(--cds-text-secondary);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .step.is-complete .step__circle {
+      background: var(--cds-support-success);
+      border-color: var(--cds-support-success);
+      color: white;
+    }
+    .step.is-active .step__circle {
+      background: var(--cds-interactive);
+      border-color: var(--cds-interactive);
+      color: white;
+      font-weight: 600;
+    }
+    .step__label {
+      font-size: 12px;
+      color: var(--cds-text-secondary);
+    }
+    .step.is-active .step__label {
+      color: var(--cds-text-primary);
+      font-weight: 600;
+    }
+    .step__line {
+      flex: 1;
+      height: 1px;
+      background: var(--cds-border-subtle-00);
+      margin: 0 var(--s-02);
+    }
+    .step__line.is-complete { background: var(--cds-support-success); }
+
+    /* ─── Loading Spinner ────────────────────────────────────── */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .is-loading .spinner { display: block; }
+    .is-loading .btn-text { display: none; }
+    .is-loading .cds-btn__icon { display: none; }
+
+    /* ─── Password visibility toggle ────────────────────────── */
+    .cds-input[type="password"] { padding-right: 48px; }
+    .cds-input.show-pw { padding-right: 48px; }
+
+    /* ─── Terms section ──────────────────────────────────────── */
+    .terms-text {
+      font-size: 12px;
+      color: var(--cds-text-secondary);
+      line-height: 1.5;
+    }
+    .terms-text a {
+      color: var(--cds-link-primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .terms-text a:hover { text-decoration: underline; }
+
+    /* ─── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page-wrapper { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: var(--s-07) var(--s-05); }
+    }
+
+    /* ─── Tag / Badge ─────────────────────────────────────────── */
+    .cds-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-02);
+      height: 24px;
+      padding: 0 var(--s-03);
+      font-size: 12px;
+      border-radius: 0;
+      background: #d0e2ff;
+      color: #0043ce;
+      font-weight: 400;
+    }
+
+    /* success state for reset */
+    .reset-success-icon {
+      width: 64px; height: 64px;
+      background: var(--cds-support-success);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto var(--s-05);
+    }
+    .text-center { text-align: center; }
+    .mt-05 { margin-top: var(--s-05); }
+    .mt-06 { margin-top: var(--s-06); }
+    .mb-05 { margin-bottom: var(--s-05); }
+  </style>
+</head>
+<body>
+
+<!-- ── Top Bar ──────────────────────────────────────────── -->
+<header class="top-bar">
+  <a href="#" class="top-bar__logo">
+    <div class="top-bar__logo-icon">
+      <svg width="12" height="12" viewBox="0 0 12 12"><rect width="12" height="12" fill="white" opacity=".9"/></svg>
+    </div>
+    <span class="top-bar__brand">MyApp</span>
+  </a>
+</header>
+
+<!-- ── Page ─────────────────────────────────────────────── -->
+<div class="page-wrapper">
+
+  <!-- Left decorative panel -->
+  <aside class="left-panel">
+    <div class="left-panel__grid"></div>
+    <div class="left-panel__card">
+      <div class="left-panel__card-label">MONTHLY ACTIVE USERS</div>
+      <div class="left-panel__card-value">1,284,900</div>
+      <div class="left-panel__card-bar">
+        <div class="left-panel__card-bar-fill"></div>
+      </div>
+    </div>
+    <div class="left-panel__content">
+      <p class="left-panel__eyebrow">IBM Carbon Design</p>
+      <h1 class="left-panel__title">더 나은 경험을<br><strong>더 빠르게</strong></h1>
+      <p class="left-panel__desc">Carbon Design System 기반의 일관된 UI 컴포넌트로 직관적이고 효율적인 서비스를 경험하세요.</p>
+    </div>
+  </aside>
+
+  <!-- Right form panel -->
+  <main class="right-panel">
+    <div class="login-form-wrap">
+
+      <!-- Header -->
+      <div class="form-header">
+        <p class="form-header__eyebrow">Welcome back</p>
+        <h2 class="form-header__title">로그인</h2>
+        <p class="form-header__subtitle">계정에 로그인하여 서비스를 이용하세요.</p>
+      </div>
+
+      <!-- Error notification -->
+      <div class="cds-notification cds-notification--error" id="login-error" role="alert">
+        <div class="cds-notification__icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 1C4.1 1 1 4.1 1 8s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm-.75 4h1.5v4h-1.5V5zm.75 7a1 1 0 110-2 1 1 0 010 2z"/>
+          </svg>
+        </div>
+        <div class="cds-notification__content">
+          <span class="cds-notification__title">로그인 실패 </span>
+          <span class="cds-notification__subtitle">이메일 또는 비밀번호를 확인해주세요.</span>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" novalidate>
+
+        <!-- Email -->
+        <div class="cds-form-item" id="email-field">
+          <label class="cds-label" for="login-email">이메일 주소 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input
+              class="cds-input"
+              type="email"
+              id="login-email"
+              name="email"
+              placeholder="name@company.com"
+              autocomplete="email"
+            />
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            올바른 이메일 형식을 입력해주세요.
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div class="cds-form-item" id="password-field">
+          <label class="cds-label" for="login-password">비밀번호 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input
+              class="cds-input"
+              type="password"
+              id="login-password"
+              name="password"
+              placeholder="비밀번호 입력"
+              autocomplete="current-password"
+            />
+            <button type="button" class="cds-input-icon-btn" id="toggle-pw-login" aria-label="비밀번호 표시/숨김">
+              <!-- eye icon -->
+              <svg id="eye-icon-login" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 3C4.5 3 1.5 5.5 1 8c.5 2.5 3.5 5 7 5s6.5-2.5 7-5c-.5-2.5-3.5-5-7-5zm0 8a3 3 0 110-6 3 3 0 010 6zm0-5a2 2 0 100 4 2 2 0 000-4z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            비밀번호를 입력해주세요.
+          </p>
+        </div>
+
+        <!-- Remember me + Forgot password -->
+        <div class="form-actions">
+          <label class="cds-checkbox-wrapper">
+            <input type="checkbox" id="remember-me" />
+            <span class="cds-checkbox-label">로그인 상태 유지</span>
+          </label>
+          <a class="cds-link cds-link--sm" id="open-reset" tabindex="0" role="button">비밀번호 재설정</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="cds-btn cds-btn--primary cds-btn--full" id="login-btn">
+          <span class="btn-text">로그인</span>
+          <div class="spinner"></div>
+          <svg class="cds-btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8.75 2.75L13.5 8l-4.75 5.25-.75-.75L11.5 9H2.5V7h9L8 3.5l.75-.75z"/>
+          </svg>
+        </button>
+
+      </form>
+
+      <!-- Social divider -->
+      <div class="divider">
+        <span class="divider__text">또는 소셜 계정으로 로그인</span>
+      </div>
+
+      <!-- Naver login -->
+      <button type="button" class="btn-naver" id="naver-login-btn" aria-label="네이버로 로그인">
+        <span class="btn-naver__logo">
+          <!-- Naver "N" mark -->
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M8.05 7.28L5.82 4H4v6h1.95V6.72L8.18 10H10V4H8.05v3.28z" fill="#03C75A"/>
+          </svg>
+        </span>
+        <span>네이버로 로그인</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="opacity:.7">
+          <path d="M8.75 2.75L13.5 8l-4.75 5.25-.75-.75L11.5 9H2.5V7h9L8 3.5l.75-.75z"/>
+        </svg>
+      </button>
+
+      <!-- Sign up row -->
+      <div class="signup-row">
+        계정이 없으신가요?
+        <a id="open-signup" tabindex="0" role="button">회원가입</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: 회원가입
+══════════════════════════════════════════════════════ -->
+<div class="cds-modal-overlay" id="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+  <div class="cds-modal" style="max-width:520px">
+    <div class="cds-modal__header">
+      <div>
+        <h2 class="cds-modal__title" id="signup-title">이메일로 회원가입</h2>
+      </div>
+      <button type="button" class="cds-modal__close" id="close-signup" aria-label="닫기">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12 4.7l-.7-.7L8 7.3 4.7 4l-.7.7L7.3 8 4 11.3l.7.7L8 8.7l3.3 3.3.7-.7L8.7 8 12 4.7z"/></svg>
+      </button>
+    </div>
+    <div class="cds-modal__body">
+      <p class="cds-modal__body-desc">계정 정보를 입력해주세요. 가입 후 이메일 인증이 필요합니다.</p>
+
+      <!-- Success notification (hidden initially) -->
+      <div class="cds-notification cds-notification--success" id="signup-success" role="status">
+        <div class="cds-notification__icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm3.5 5.5l-4 4.5-2.5-2.5.75-.75L7.5 9.5l3.25-3.75.75.75z"/></svg>
+        </div>
+        <div class="cds-notification__content">
+          <span class="cds-notification__title">가입 완료! </span>
+          <span class="cds-notification__subtitle">입력하신 이메일로 인증 메일을 발송했습니다.</span>
+        </div>
+      </div>
+
+      <form id="signup-form" novalidate>
+        <!-- Name -->
+        <div class="cds-form-item" id="su-name-field">
+          <label class="cds-label" for="su-name">이름 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="text" id="su-name" placeholder="홍길동" autocomplete="name" />
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            이름을 입력해주세요.
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div class="cds-form-item" id="su-email-field">
+          <label class="cds-label" for="su-email">이메일 주소 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="email" id="su-email" placeholder="name@company.com" autocomplete="email" />
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            올바른 이메일 형식을 입력해주세요.
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div class="cds-form-item" id="su-pw-field">
+          <label class="cds-label" for="su-password">비밀번호 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="password" id="su-password" placeholder="8자 이상, 영문·숫자·특수문자 포함" autocomplete="new-password" />
+            <button type="button" class="cds-input-icon-btn" id="toggle-su-pw" aria-label="비밀번호 표시/숨김">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 3C4.5 3 1.5 5.5 1 8c.5 2.5 3.5 5 7 5s6.5-2.5 7-5c-.5-2.5-3.5-5-7-5zm0 8a3 3 0 110-6 3 3 0 010 6zm0-5a2 2 0 100 4 2 2 0 000-4z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            비밀번호는 8자 이상, 영문·숫자·특수문자를 포함해야 합니다.
+          </p>
+          <!-- Password strength -->
+          <div class="pw-strength" id="pw-strength">
+            <div class="pw-strength__bars">
+              <div class="pw-strength__bar" id="ps-bar-1"></div>
+              <div class="pw-strength__bar" id="ps-bar-2"></div>
+              <div class="pw-strength__bar" id="ps-bar-3"></div>
+              <div class="pw-strength__bar" id="ps-bar-4"></div>
+            </div>
+            <span class="pw-strength__label" id="ps-label">비밀번호를 입력해주세요</span>
+          </div>
+        </div>
+
+        <!-- Confirm password -->
+        <div class="cds-form-item" id="su-pw2-field">
+          <label class="cds-label" for="su-password2">비밀번호 확인 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="password" id="su-password2" placeholder="비밀번호 재입력" autocomplete="new-password" />
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            비밀번호가 일치하지 않습니다.
+          </p>
+        </div>
+
+        <!-- Terms -->
+        <div class="cds-form-item mt-05" id="su-terms-field">
+          <label class="cds-checkbox-wrapper">
+            <input type="checkbox" id="su-terms" />
+            <span class="cds-checkbox-label terms-text">
+              <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에 동의합니다 <sup style="color:var(--cds-support-error)">*</sup>
+            </span>
+          </label>
+          <p class="cds-error-text" style="margin-top:6px">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            이용약관에 동의해주세요.
+          </p>
+        </div>
+      </form>
+    </div>
+    <div class="cds-modal__footer">
+      <button type="button" class="cds-btn cds-btn--tertiary" id="cancel-signup">취소</button>
+      <button type="button" class="cds-btn cds-btn--primary" id="submit-signup" style="padding-right:var(--s-05)">
+        <span class="btn-text">가입하기</span>
+        <div class="spinner"></div>
+        <svg class="cds-btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8.75 2.75L13.5 8l-4.75 5.25-.75-.75L11.5 9H2.5V7h9L8 3.5l.75-.75z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: 비밀번호 재설정
+══════════════════════════════════════════════════════ -->
+<div class="cds-modal-overlay" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-title">
+  <div class="cds-modal" style="max-width:480px">
+    <div class="cds-modal__header">
+      <h2 class="cds-modal__title" id="reset-title">비밀번호 재설정</h2>
+      <button type="button" class="cds-modal__close" id="close-reset" aria-label="닫기">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12 4.7l-.7-.7L8 7.3 4.7 4l-.7.7L7.3 8 4 11.3l.7.7L8 8.7l3.3 3.3.7-.7L8.7 8 12 4.7z"/></svg>
+      </button>
+    </div>
+    <div class="cds-modal__body">
+
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step is-active" id="step-1">
+          <div class="step__circle" id="step-1-circle">1</div>
+          <span class="step__label">이메일 입력</span>
+        </div>
+        <div class="step__line" id="step-line"></div>
+        <div class="step" id="step-2">
+          <div class="step__circle" id="step-2-circle">2</div>
+          <span class="step__label">인증 코드</span>
+        </div>
+        <div class="step__line" id="step-line-2"></div>
+        <div class="step" id="step-3">
+          <div class="step__circle" id="step-3-circle">3</div>
+          <span class="step__label">완료</span>
+        </div>
+      </div>
+
+      <!-- ── Step 1: Email ───────────────────────────────── -->
+      <div id="reset-step-1">
+        <p class="cds-modal__body-desc">가입하신 이메일 주소를 입력하시면 인증 코드를 발송해드립니다.</p>
+        <div class="cds-form-item" id="reset-email-field">
+          <label class="cds-label" for="reset-email">이메일 주소 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="email" id="reset-email" placeholder="name@company.com" autocomplete="email" />
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            올바른 이메일 형식을 입력해주세요.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── Step 2: Verification code + New pw ─────────── -->
+      <div id="reset-step-2" style="display:none">
+        <div class="cds-notification cds-notification--info is-visible mb-05" role="status" style="margin-bottom:var(--s-05)">
+          <div class="cds-notification__icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm-.5 4h1v1.5h-1V5zm0 3h1v4h-1V8z"/></svg>
+          </div>
+          <div class="cds-notification__content">
+            <span class="cds-notification__title">인증 코드 발송 </span>
+            <span class="cds-notification__subtitle" id="reset-email-display">입력하신 이메일로 코드를 발송했습니다.</span>
+          </div>
+        </div>
+        <div class="cds-form-item" id="reset-code-field">
+          <label class="cds-label" for="reset-code">인증 코드 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="text" id="reset-code" placeholder="6자리 코드 입력" maxlength="6" style="letter-spacing:.5em;font-size:18px;font-weight:600;text-align:center" />
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            인증 코드가 올바르지 않습니다.
+          </p>
+          <p class="cds-helper-text">인증 코드가 오지 않았나요? <a class="cds-link cds-link--sm" id="resend-code" style="cursor:pointer">재발송</a></p>
+        </div>
+        <div class="cds-form-item" id="reset-newpw-field">
+          <label class="cds-label" for="reset-newpw">새 비밀번호 <sup>*</sup></label>
+          <div class="cds-input-wrapper">
+            <input class="cds-input" type="password" id="reset-newpw" placeholder="8자 이상, 영문·숫자·특수문자 포함" autocomplete="new-password" />
+            <button type="button" class="cds-input-icon-btn" id="toggle-reset-pw" aria-label="비밀번호 표시/숨김">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 3C4.5 3 1.5 5.5 1 8c.5 2.5 3.5 5 7 5s6.5-2.5 7-5c-.5-2.5-3.5-5-7-5zm0 8a3 3 0 110-6 3 3 0 010 6zm0-5a2 2 0 100 4 2 2 0 000-4z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="cds-error-text">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 .75a5.25 5.25 0 100 10.5A5.25 5.25 0 006 .75zm-.5 3h1v3.5h-1V3.75zM6 9.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/></svg>
+            비밀번호는 8자 이상, 영문·숫자·특수문자를 포함해야 합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── Step 3: Complete ───────────────────────────── -->
+      <div id="reset-step-3" style="display:none" class="text-center">
+        <div class="reset-success-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="white">
+            <path d="M14 21.5l-5.5-5.5 1.5-1.5 4 4 9-9 1.5 1.5z"/>
+          </svg>
+        </div>
+        <h3 style="font-size:20px;font-weight:400;margin-bottom:var(--s-03)">비밀번호 변경 완료</h3>
+        <p style="font-size:14px;color:var(--cds-text-secondary);line-height:1.5">
+          비밀번호가 성공적으로 변경되었습니다.<br>새 비밀번호로 로그인해주세요.
+        </p>
+      </div>
+
+    </div>
+    <div class="cds-modal__footer">
+      <button type="button" class="cds-btn cds-btn--tertiary" id="reset-back-btn" style="display:none">이전</button>
+      <button type="button" class="cds-btn cds-btn--tertiary" id="cancel-reset">취소</button>
+      <button type="button" class="cds-btn cds-btn--primary" id="reset-next-btn" style="padding-right:var(--s-05)">
+        <span class="btn-text" id="reset-btn-label">인증 코드 발송</span>
+        <div class="spinner"></div>
+        <svg class="cds-btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8.75 2.75L13.5 8l-4.75 5.25-.75-.75L11.5 9H2.5V7h9L8 3.5l.75-.75z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   Utilities
+══════════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+
+function openModal(id) {
+  const m = $(id);
+  m.classList.add('is-open');
+  m.querySelector('.cds-modal')?.querySelector('input, button')?.focus();
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  $(id).classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+function setLoading(btn, state) {
+  btn.classList.toggle('is-loading', state);
+  btn.disabled = state;
+}
+function showError(fieldId, msg) {
+  const field = $(fieldId);
+  field.classList.add('has-error');
+  if (msg) field.querySelector('.cds-error-text').lastChild.textContent = ' ' + msg;
+}
+function clearError(fieldId) {
+  $(fieldId)?.classList.remove('has-error');
+}
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+function isStrongPassword(v) {
+  return v.length >= 8 && /[A-Za-z]/.test(v) && /[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v);
+}
+
+/* Close on overlay click */
+document.querySelectorAll('.cds-modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeModal(overlay.id);
+  });
+});
+/* Close on Escape */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.cds-modal-overlay.is-open').forEach(m => closeModal(m.id));
+  }
+});
+
+/* ══════════════════════════════════════════════════════════
+   Password visibility toggles
+══════════════════════════════════════════════════════════ */
+function makeToggle(btnId, inputId) {
+  const btn = $(btnId), input = $(inputId);
+  if (!btn || !input) return;
+  const show = `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3C4.5 3 1.5 5.5 1 8c.5 2.5 3.5 5 7 5s6.5-2.5 7-5c-.5-2.5-3.5-5-7-5zm0 8a3 3 0 110-6 3 3 0 010 6zm0-5a2 2 0 100 4 2 2 0 000-4z"/></svg>`;
+  const hide = `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.5 2.5l-11 11-.7-.7 1.9-1.9A7 7 0 011 8c.5-2.5 3.5-5 7-5 1.1 0 2.2.3 3.1.7l1.7-1.7.7.5zm-2.7 2.7A5 5 0 008 4C5.3 4 3 5.9 2 8a5.2 5.2 0 001.8 2.4l1.1-1.1A3 3 0 0110 5.8l.8-.6zM8 6a2 2 0 012 2c0 .3-.1.7-.2 1l-2.8-2.8c.3-.1.7-.2 1-.2zm4.2.4l-1.1 1.1c.1.3.2.7.2 1-.2 1.1-.9 2.1-2 2.7l1 1.2A7.1 7.1 0 0014 8c-.2-.6-.4-1.1-.8-1.6z"/></svg>`;
+  btn.addEventListener('click', () => {
+    const shown = input.type === 'text';
+    input.type = shown ? 'password' : 'text';
+    btn.innerHTML = shown ? show : hide;
+  });
+}
+makeToggle('toggle-pw-login', 'login-password');
+makeToggle('toggle-su-pw', 'su-password');
+makeToggle('toggle-reset-pw', 'reset-newpw');
+
+/* ══════════════════════════════════════════════════════════
+   Password strength meter
+══════════════════════════════════════════════════════════ */
+$('su-password').addEventListener('input', function() {
+  const v = this.value;
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (/[A-Za-z]/.test(v) && /[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  if (v.length >= 12) score++;
+
+  const bars = ['ps-bar-1','ps-bar-2','ps-bar-3','ps-bar-4'];
+  const levels = ['','active-weak','active-fair','active-good','active-strong'];
+  const labels = ['비밀번호를 입력해주세요','매우 약함','보통','강함','매우 강함'];
+
+  bars.forEach((id, i) => {
+    const el = $(id);
+    el.className = 'pw-strength__bar';
+    if (v.length > 0 && i < score) el.classList.add(levels[score]);
+  });
+  $('ps-label').textContent = v.length === 0 ? labels[0] : labels[Math.max(1, score)];
+  $('ps-label').style.color = ['','var(--cds-support-error)','#f1c21b','#198038','#198038'][score] || 'var(--cds-text-helper)';
+});
+
+/* ══════════════════════════════════════════════════════════
+   Login Form
+══════════════════════════════════════════════════════════ */
+$('login-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  let valid = true;
+  const email = $('login-email').value;
+  const pw = $('login-password').value;
+
+  clearError('email-field'); clearError('password-field');
+  $('login-error').classList.remove('is-visible');
+
+  if (!isValidEmail(email)) { showError('email-field'); valid = false; }
+  if (!pw) { showError('password-field'); valid = false; }
+  if (!valid) return;
+
+  const btn = $('login-btn');
+  setLoading(btn, true);
+
+  // Simulate API call
+  await new Promise(r => setTimeout(r, 1800));
+  setLoading(btn, false);
+
+  // Demo: show error for wrong credentials
+  if (email !== 'test@test.com' || pw !== '12345') {
+    $('login-error').classList.add('is-visible');
+    $('login-email').focus();
+  } else {
+    alert('로그인 성공! (데모)');
+  }
+});
+
+/* Real-time validation clearing */
+$('login-email').addEventListener('input', () => clearError('email-field'));
+$('login-password').addEventListener('input', () => clearError('password-field'));
+
+/* ══════════════════════════════════════════════════════════
+   Naver Login
+══════════════════════════════════════════════════════════ */
+$('naver-login-btn').addEventListener('click', async function() {
+  setLoading(this, true);
+  await new Promise(r => setTimeout(r, 1200));
+  setLoading(this, false);
+  // In production: window.location.href = '/auth/naver';
+  alert('네이버 OAuth 연동 (데모)\n실제 구현 시 /auth/naver 엔드포인트로 리다이렉트됩니다.');
+});
+
+/* ══════════════════════════════════════════════════════════
+   Sign Up Modal
+══════════════════════════════════════════════════════════ */
+$('open-signup').addEventListener('click', () => openModal('signup-modal'));
+$('open-signup').addEventListener('keydown', e => e.key === 'Enter' && openModal('signup-modal'));
+$('close-signup').addEventListener('click', () => closeModal('signup-modal'));
+$('cancel-signup').addEventListener('click', () => closeModal('signup-modal'));
+
+$('submit-signup').addEventListener('click', async function() {
+  let valid = true;
+  const name  = $('su-name').value.trim();
+  const email = $('su-email').value.trim();
+  const pw    = $('su-password').value;
+  const pw2   = $('su-password2').value;
+  const terms = $('su-terms').checked;
+
+  ['su-name-field','su-email-field','su-pw-field','su-pw2-field','su-terms-field']
+    .forEach(clearError);
+  $('signup-success').classList.remove('is-visible');
+
+  if (!name) { showError('su-name-field'); valid = false; }
+  if (!isValidEmail(email)) { showError('su-email-field'); valid = false; }
+  if (!isStrongPassword(pw)) { showError('su-pw-field'); valid = false; }
+  if (pw !== pw2) { showError('su-pw2-field'); valid = false; }
+  if (!terms) { showError('su-terms-field'); valid = false; }
+  if (!valid) return;
+
+  setLoading(this, true);
+  await new Promise(r => setTimeout(r, 1600));
+  setLoading(this, false);
+
+  $('signup-success').classList.add('is-visible');
+  $('signup-form').querySelectorAll('input').forEach(i => { i.value = ''; i.type === 'checkbox' && (i.checked = false); });
+  ['ps-bar-1','ps-bar-2','ps-bar-3','ps-bar-4'].forEach(id => { $(id).className = 'pw-strength__bar'; });
+  $('ps-label').textContent = '비밀번호를 입력해주세요';
+
+  setTimeout(() => closeModal('signup-modal'), 2800);
+});
+
+/* real-time clear */
+['su-name','su-email','su-password','su-password2'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    clearError(id.replace('su-', 'su-') + '-field');
+    // map input id → field id
+    const map = {'su-name':'su-name-field','su-email':'su-email-field','su-password':'su-pw-field','su-password2':'su-pw2-field'};
+    clearError(map[id]);
+  });
+});
+
+/* ══════════════════════════════════════════════════════════
+   Password Reset Modal — 3-step flow
+══════════════════════════════════════════════════════════ */
+let resetStep = 1;
+
+function goToResetStep(n) {
+  resetStep = n;
+  $('reset-step-1').style.display = n === 1 ? '' : 'none';
+  $('reset-step-2').style.display = n === 2 ? '' : 'none';
+  $('reset-step-3').style.display = n === 3 ? '' : 'none';
+
+  // Step indicator
+  const steps = [1,2,3];
+  steps.forEach(s => {
+    const el = $(`step-${s}`);
+    el.classList.remove('is-active','is-complete');
+    if (s < n) el.classList.add('is-complete');
+    if (s === n) el.classList.add('is-active');
+
+    const circle = $(`step-${s}-circle`);
+    if (s < n) circle.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="white"><path d="M4 7.4l-2.7-2.7.7-.7L4 6 8 2l.7.7z"/></svg>`;
+    else circle.textContent = s;
+  });
+  $('step-line').classList.toggle('is-complete', n > 1);
+  $('step-line-2').classList.toggle('is-complete', n > 2);
+
+  // Button labels
+  const labels = {1:'인증 코드 발송', 2:'비밀번호 변경', 3:'로그인 하기'};
+  $('reset-btn-label').textContent = labels[n];
+  $('reset-back-btn').style.display = n > 1 && n < 3 ? '' : 'none';
+  $('cancel-reset').style.display = n === 3 ? 'none' : '';
+}
+
+$('open-reset').addEventListener('click', () => {
+  goToResetStep(1);
+  $('reset-email').value = $('login-email').value; // prefill
+  openModal('reset-modal');
+});
+$('open-reset').addEventListener('keydown', e => e.key === 'Enter' && $('open-reset').click());
+$('close-reset').addEventListener('click', () => closeModal('reset-modal'));
+$('cancel-reset').addEventListener('click', () => closeModal('reset-modal'));
+
+$('reset-back-btn').addEventListener('click', () => {
+  if (resetStep === 2) goToResetStep(1);
+});
+
+$('reset-next-btn').addEventListener('click', async function() {
+  if (resetStep === 1) {
+    const email = $('reset-email').value.trim();
+    clearError('reset-email-field');
+    if (!isValidEmail(email)) { showError('reset-email-field'); return; }
+
+    setLoading(this, true);
+    await new Promise(r => setTimeout(r, 1400));
+    setLoading(this, false);
+
+    $('reset-email-display').textContent = `${email}로 6자리 인증 코드를 발송했습니다.`;
+    goToResetStep(2);
+
+  } else if (resetStep === 2) {
+    const code = $('reset-code').value.trim();
+    const newpw = $('reset-newpw').value;
+    let valid = true;
+    clearError('reset-code-field'); clearError('reset-newpw-field');
+
+    if (code.length !== 6) { showError('reset-code-field', '6자리 코드를 입력해주세요.'); valid = false; }
+    if (!isStrongPassword(newpw)) { showError('reset-newpw-field'); valid = false; }
+    if (!valid) return;
+
+    setLoading(this, true);
+    await new Promise(r => setTimeout(r, 1600));
+    setLoading(this, false);
+
+    // Demo: any 6-digit code accepted
+    goToResetStep(3);
+
+  } else if (resetStep === 3) {
+    closeModal('reset-modal');
+    $('login-email').focus();
+  }
+});
+
+$('resend-code').addEventListener('click', async function() {
+  this.textContent = '발송 중...';
+  await new Promise(r => setTimeout(r, 1000));
+  this.textContent = '재발송 완료!';
+  setTimeout(() => this.textContent = '재발송', 3000);
+});
+
+$('reset-email').addEventListener('input', () => clearError('reset-email-field'));
+$('reset-code').addEventListener('input', () => clearError('reset-code-field'));
+$('reset-newpw').addEventListener('input', () => clearError('reset-newpw-field'));
+</script>
+</body>
+</html>
